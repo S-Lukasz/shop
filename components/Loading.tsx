@@ -14,14 +14,14 @@ export default function Loading() {
       className={`${isViewEnabled} fixed z-0 flex h-full w-full flex-col items-center justify-center bg-blue-100 p-10 text-center text-white`}
     >
       <svg
-        width="45"
-        height="45"
+        width="65"
+        height="65"
         viewBox="0 0 38 38"
         xmlns="http://www.w3.org/2000/svg"
         stroke="#fff"
       >
         <g fill="none" fill-rule="evenodd">
-          <g transform="translate(1 1)" stroke-width="2">
+          <g transform="translate(1 1)" stroke-width="3">
             <circle stroke-opacity=".5" cx="18" cy="18" r="18" />
             <path d="M36 18c0-9.94-8.06-18-18-18">
               <animateTransform

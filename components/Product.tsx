@@ -83,10 +83,16 @@ export default function Product({ product }: Prop) {
         <div className="flex gap-4">
           <Link
             href={`/products/${product.id}`}
-            className="my-4 ml-14 mr-4 flex h-[11rem] w-[11rem] flex-shrink-0 flex-grow-0 rounded-lg 
-              bg-white object-contain object-center p-4 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none "
+            className="ml-4 flex h-[12rem] w-[12rem] flex-shrink-0 flex-grow-0 justify-center bg-white"
           >
-            <Image src={product.image} alt="proj" />
+            <Image
+              className=" flex rounded-lg object-contain object-center p-2 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none"
+              loader={() => product.image}
+              src={product.image}
+              width={120}
+              height={120}
+              alt="proj"
+            />
           </Link>
           <div className="flex-col">
             <p className=" z-[2] mr-4 line-clamp-3 h-[3lh] capitalize ">

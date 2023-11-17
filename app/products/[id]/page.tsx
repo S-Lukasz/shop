@@ -60,7 +60,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         <div className="flex justify-center rounded-lg bg-white shadow-md">
           <Image
             className="max-h-sm flex max-w-sm flex-shrink-0 flex-grow-0 rounded-lg bg-white object-contain object-center p-20"
+            loader={() => product?.image ?? ""}
             src={product?.image ?? ""}
+            height={380}
+            width={380}
             alt="proj"
           />
         </div>
@@ -106,10 +109,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex w-[42rem] flex-col items-center justify-center gap-4 rounded-lg bg-white py-12 shadow-md">
-            <p className="z-[2] w-full text-center text-2xl font-bold capitalize">
+            <p className="w-full text-center text-2xl font-bold capitalize">
               Description
             </p>
-            <p className="z-[2] w-full px-14 text-xl capitalize">
+            <p className="w-full px-14 text-xl capitalize">
               {product?.description}
             </p>
           </div>

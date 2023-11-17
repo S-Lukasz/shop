@@ -39,7 +39,10 @@ export default function Product({ cartItem }: Prop) {
         <Image
           className="my-4 ml-10 mr-8 flex h-[5rem] w-[5rem] flex-shrink-0 flex-grow-0 rounded-lg 
             bg-white object-contain object-center p-4 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none "
+          loader={() => product?.image ?? ""}
           src={product?.image ?? ""}
+          height={80}
+          width={80}
           alt="proj"
         />
       </div>
