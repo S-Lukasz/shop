@@ -1,19 +1,56 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
 import { Product as ProductType } from "@/types";
 import Product from "@/components/Product";
-import Link from "next/link";
+import { Context } from "@/components/ContextWrapper";
 
 export default function Home() {
+  const { setFetch } = useContext(Context);
+  const [filterItems, setFilteredItems] = useState<ProductType[]>([]);
   const [products, setProducts] = useState<ProductType[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const productItems = useMemo(() => {
-    return products.map((result) => <Product product={result}></Product>);
-  }, [products]);
+  const [currentCategory, setCategory] = useState("All");
+  const [isFilterSet, setFilter] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+
+  const onPriceFilter = () => {
+    if (minPrice == 0 && maxPrice == 0) return products;
+
+    setFilter(true);
+    const productsFiltered = products.filter(
+      (product) => product.price >= minPrice && product.price <= maxPrice,
+    );
+    setFilteredItems(productsFiltered);
+  };
 
   useEffect(() => {
-    const test = async () => {
+    onPriceFilter();
+  }, [products]);
+
+  const productItems = useMemo(() => {
+    const productsToDisplay = isFilterSet ? filterItems : products;
+
+    if (productsToDisplay.length == 0) {
+      return (
+        <div className="flex w-full gap-2 rounded-lg bg-white p-6 pl-4 shadow-md ">
+          <p className=" m-auto line-clamp-1 h-[1lh] text-xl font-semibold">
+            There is no available result for current search filters.
+          </p>
+        </div>
+      );
+    }
+
+    return productsToDisplay.map((result) => (
+      <Product product={result}></Product>
+    ));
+  }, [products, filterItems]);
+
+  useEffect(() => {
+    setFetch(false);
+
+    const initialFetch = async () => {
       const promises = await Promise.all([
         fetch("https://fakestoreapi.com/products"),
         fetch("https://fakestoreapi.com/products/categories"),
@@ -23,35 +60,72 @@ export default function Home() {
         promises.map((promise) => promise.json()),
       );
 
+      const array = ["All", ...categories];
       setProducts(products);
-      setCategories(categories);
+      setCategories(array);
+
+      setFetch(true);
     };
 
-    test();
+    initialFetch();
   }, []);
 
+  const onCategoryChange = async (category: string) => {
+    const path =
+      category === "All"
+        ? "https://fakestoreapi.com/products"
+        : `https://fakestoreapi.com/products/category/${category}`;
+    const result = await fetch(path);
+    const categoryProducts = await result.json();
+
+    setFilter(false);
+    setProducts(categoryProducts);
+    setCategory(category);
+  };
+
+  const onMinPriceChanged = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setMinPrice(parseInt(target.value));
+  };
+
+  const onMaxPriceChanged = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setMaxPrice(parseInt(target.value));
+  };
+
   return (
-    <div className=" flex ">
-      <div className=" flex w-1/6 flex-col bg-slate-100 px-8 pt-10">
-        <p className=" text-lg font-bold">Categories</p>
+    <div className="flex grow">
+      <div className="flex h-full w-1/6 flex-col bg-blue-100 px-8 pt-10">
+        <p className="text-lg font-bold">Categories</p>
         <ul>
           {categories.map((category) => (
-            <li className="transform text-gray-700 transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none ">
-              <Link className="pl-4 capitalize " href="/">
+            <li
+              className={`${
+                category === currentCategory
+                  ? " text-lg font-semibold text-blue-400"
+                  : "text-grey-700 text-md font-normal"
+              } transform transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none`}
+            >
+              <button
+                onClick={() => onCategoryChange(category)}
+                className="pl-4 capitalize "
+              >
                 {category}
-              </Link>
+              </button>
             </li>
           ))}
         </ul>
-        <p className=" mt-4 text-lg font-bold">Price</p>
+        <p className="mt-4 text-lg font-bold">Price</p>
         <div className="flex items-center gap-4 pl-4 pt-2">
           <input
-            className="bold text-md w-1/3 rounded-lg px-4 py-1 text-center font-semibold shadow-md "
+            onInput={(e) => onMinPriceChanged(e)}
+            className="bold text-md w-1/3 rounded-lg px-4 py-1 text-center font-semibold shadow-md"
             placeholder="min"
             type="number"
           />
           <span className="text-md font-semibold">-</span>
           <input
+            onInput={(e) => onMaxPriceChanged(e)}
             className="bold text-md w-1/3 rounded-lg px-4 py-1 text-center font-semibold shadow-md"
             placeholder="max"
             type="number"
@@ -59,14 +133,15 @@ export default function Home() {
           <span className="text-md font-semibold">$</span>
         </div>
         <button
+          onClick={onPriceFilter}
           className="bold text-md mx-12 mt-10 flex rounded-lg bg-blue-500 px-4 py-1 text-center font-semibold text-white 
           shadow-md transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-white hover:text-blue-500 motion-reduce:transform-none"
         >
           FILTER
         </button>
       </div>
-      <div className=" flex w-5/6 flex-col items-center bg-white">
-        <div className=" my-12 flex w-5/6 flex-col gap-8">
+      <div className="flex w-5/6 flex-col items-center bg-slate-100">
+        <div className="my-12 flex w-5/6 flex-col gap-8">
           {/* <p className="  text-2xl font-semibold mt-5">Our products:</p> */}
           {productItems}
         </div>

@@ -17,7 +17,10 @@ export interface CartItem {
   product: Product;
 }
 
-export interface CartContext {
+export interface MainContext {
+  isFetched: boolean;
   cartItems: CartItem[];
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
+  setFetch: Dispatch<SetStateAction<boolean>>;
+  addItemToCart: (amount: number, product: Product) => void;
 }
