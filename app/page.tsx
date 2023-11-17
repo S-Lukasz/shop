@@ -1,6 +1,13 @@
 "use client";
 
-import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Product as ProductType } from "@/types";
 import Product from "@/components/Product";
 import { Context } from "@/components/ContextWrapper";
@@ -15,7 +22,7 @@ export default function Home() {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
 
-  const onPriceFilter = () => {
+  const onPriceFilter = useCallback(() => {
     if (minPrice == 0 && maxPrice == 0) return products;
 
     setFilter(true);
@@ -23,11 +30,11 @@ export default function Home() {
       (product) => product.price >= minPrice && product.price <= maxPrice,
     );
     setFilteredItems(productsFiltered);
-  };
+  }, [maxPrice, minPrice, products]);
 
   useEffect(() => {
     onPriceFilter();
-  }, [products]);
+  }, [onPriceFilter, products]);
 
   const productItems = useMemo(() => {
     const productsToDisplay = isFilterSet ? filterItems : products;
@@ -42,10 +49,10 @@ export default function Home() {
       );
     }
 
-    return productsToDisplay.map((result) => (
-      <Product product={result}></Product>
+    return productsToDisplay.map((result, i) => (
+      <Product key={"productKey_" + result.id} product={result}></Product>
     ));
-  }, [products, filterItems]);
+  }, [isFilterSet, filterItems, products]);
 
   useEffect(() => {
     setFetch(false);
@@ -98,8 +105,9 @@ export default function Home() {
       <div className="flex h-full w-1/6 flex-col bg-blue-100 px-8 pt-10">
         <p className="text-lg font-bold">Categories</p>
         <ul>
-          {categories.map((category) => (
+          {categories.map((category, i) => (
             <li
+              key={"categoryListKey_" + i}
               className={`${
                 category === currentCategory
                   ? " text-lg font-semibold text-blue-400"

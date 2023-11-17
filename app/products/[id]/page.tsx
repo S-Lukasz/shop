@@ -51,7 +51,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     };
 
     initialFetch();
-  }, []);
+  }, [params.id, setFetch]);
 
   return (
     // product ? <Product product={product}></Product> : <p>No item available</p>

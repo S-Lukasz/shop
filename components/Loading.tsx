@@ -4,7 +4,7 @@ import { useContext, useMemo } from "react";
 import { Context } from "./ContextWrapper";
 
 export default function Loading() {
-  const { isFetched, setFetch } = useContext(Context);
+  const { isFetched } = useContext(Context);
   const isViewEnabled = useMemo(() => {
     return isFetched ? "hidden " : "block ";
   }, [isFetched]);

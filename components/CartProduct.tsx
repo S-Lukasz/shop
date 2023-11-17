@@ -1,5 +1,5 @@
 import { CartItem, Product } from "@/types";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext } from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Context } from "./ContextWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,6 @@ interface Prop {
 export default function Product({ cartItem }: Prop) {
   const product = cartItem.product;
   const { addItemToCart, setCartItems } = useContext(Context);
-  const [amount, setAmount] = useState<number>(cartItem.amount);
 
   const amounts = new Array(99).fill(0).map((_, i) => (
     <option key={"cartAmountKey_" + i} selected={cartItem.amount === i + 1}>
@@ -27,7 +26,6 @@ export default function Product({ cartItem }: Prop) {
 
   const onAmountChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const amountToAdd = parseInt(event.target.value) - cartItem.amount;
-    setAmount(amountToAdd);
     addItemToCart(amountToAdd, product);
   };
 
