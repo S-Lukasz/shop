@@ -5,10 +5,13 @@ import { Product as ProductType } from "@/types";
 import { Context } from "@/components/ContextWrapper";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
-  const amounts = new Array(99).fill(0).map((_, i) => <option>{i + 1}</option>);
+  const amounts = new Array(99)
+    .fill(0)
+    .map((_, i) => <option key={"amountKey_" + i}>{i + 1}</option>);
   const { setFetch, addItemToCart } = useContext(Context);
 
   const [product, setProduct] = useState<ProductType>();
@@ -20,7 +23,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     const starCount = parseInt(product.rating.rate.toString());
     const stars = new Array(5).fill(0).map((_, i) => {
       const starColor = i <= starCount ? " text-yellow-300 " : "text-gray-300";
-      return <FontAwesomeIcon className={starColor} icon={faStar} />;
+      return (
+        <FontAwesomeIcon
+          key={"starIconKey_" + i}
+          className={starColor}
+          icon={faStar}
+        />
+      );
     });
     return stars;
   }, [product]);
@@ -49,10 +58,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     <div className="m-auto flex py-10">
       <div className="m-auto flex h-1/3 w-2/3 justify-center gap-4">
         <div className="flex justify-center rounded-lg bg-white shadow-md">
-          <img
-            className=" max-h-sm flex max-w-sm flex-shrink-0 flex-grow-0 rounded-lg 
-              bg-white object-contain object-center p-20  " //transition-all duration-300 ease-out hover:scale-[1.1] motion-reduce:transform-none
-            src={product?.image}
+          <Image
+            className="max-h-sm flex max-w-sm flex-shrink-0 flex-grow-0 rounded-lg bg-white object-contain object-center p-20"
+            src={product?.image ?? ""}
             alt="proj"
           />
         </div>

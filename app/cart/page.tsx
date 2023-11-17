@@ -10,7 +10,10 @@ export default function About() {
   const productItems = useMemo(() => {
     if (cartItems.length > 0) {
       return cartItems.map((item) => (
-        <CartProduct cartItem={item}></CartProduct>
+        <CartProduct
+          key={"productKey_" + item.product.id}
+          cartItem={item}
+        ></CartProduct>
       ));
     } else {
       return (

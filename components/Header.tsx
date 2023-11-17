@@ -44,8 +44,8 @@ export default function Header() {
       <div className="flex">
         <div className="flex h-16 items-center bg-white text-center ">
           <div className="flex items-center divide-x-2 divide-gray-300 text-center text-2xl font-bold ">
-            {PAGES.map((result) => (
-              <Link className=" px-10 " href={result.path}>
+            {PAGES.map((result, i) => (
+              <Link key={"pageKey_" + i} className=" px-10 " href={result.path}>
                 <p className="transform text-gray-700 transition-all duration-300 ease-out hover:scale-110 hover:text-blue-600 motion-reduce:transform-none ">
                   {result.name}
                 </p>

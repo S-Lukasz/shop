@@ -1,15 +1,18 @@
-import { CartItem, Product } from "@/types";
+import { Product } from "@/types";
+import { Context } from "@/components/ContextWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faStar } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
-import { Context } from "@/components/ContextWrapper";
 import { ChangeEvent, useContext, useMemo, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Prop {
   product: Product;
 }
 
-const amounts = new Array(99).fill(0).map((_, i) => <option>{i + 1}</option>);
+const amounts = new Array(99)
+  .fill(0)
+  .map((_, i) => <option key={"amountOptionKey_" + i}>{i + 1}</option>);
 
 function AddToCart({ product }: Prop) {
   const { addItemToCart } = useContext(Context);
@@ -19,10 +22,16 @@ function AddToCart({ product }: Prop) {
     const starCount = parseInt(product.rating.rate.toString());
     const stars = new Array(5).fill(0).map((_, i) => {
       const starColor = i <= starCount ? " text-yellow-300 " : "text-gray-300";
-      return <FontAwesomeIcon className={starColor} icon={faStar} />;
+      return (
+        <FontAwesomeIcon
+          key={"starIconKey_" + i}
+          className={starColor}
+          icon={faStar}
+        />
+      );
     });
     return stars;
-  }, []);
+  }, [product.rating.rate]);
 
   const onAmountChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setAmount(parseInt(event.target.value));
@@ -77,7 +86,7 @@ export default function Product({ product }: Prop) {
             className="my-4 ml-14 mr-4 flex h-[11rem] w-[11rem] flex-shrink-0 flex-grow-0 rounded-lg 
               bg-white object-contain object-center p-4 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none "
           >
-            <img src={product.image} alt="proj" />
+            <Image src={product.image} alt="proj" />
           </Link>
           <div className="flex-col">
             <p className=" z-[2] mr-4 line-clamp-3 h-[3lh] capitalize ">
