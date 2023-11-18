@@ -67,8 +67,6 @@ export default function Cart() {
   const [deliveryInputs, setDeliveryInput] = useState(
     DELIVERY_DATA.map(() => ""),
   );
-  const alertText =
-    "Are you sure you want to delete productName item from cart?";
 
   useEffect(() => {
     console.log("currentStage: " + currentStage);
@@ -111,6 +109,8 @@ export default function Cart() {
   }, [cartItems]);
 
   const removeItem = (product?: Product) => {
+    console.log("removeItem: " + product?.title);
+
     if (!product) return;
 
     setCartItems((cartItems) =>
@@ -145,23 +145,7 @@ export default function Cart() {
 
   const stageView = useMemo(() => {
     if (currentStage === 0) {
-      return (
-        <>
-          <div className=" flex w-1/2 flex-col gap-8 ">{productItems}</div>
-
-          <AlertPrompt
-            title={alertText.replace(
-              "productName",
-              `<span style="color: blue>${product?.title ?? ""}</span>`,
-            )}
-            arg0="Yes"
-            arg1="No"
-            show={isAlertActive}
-            onClose={() => setIsAlertActive(false)}
-            onConfirm={() => removeItem(product)}
-          />
-        </>
-      );
+      return <div className=" flex w-1/2 flex-col gap-8 ">{productItems}</div>;
     } else if (currentStage === 1) {
       const deliveryResult = DELIVERY_DATA.map((result, i) => {
         return (
@@ -190,15 +174,19 @@ export default function Cart() {
         </div>
       );
     }
-  }, [currentStage]);
+  }, [currentStage, productItems]);
 
   const stageButton = useMemo(() => {
     let inputsFilled = 0;
     for (let index = 0; index < deliveryInputs.length; index++) {
       if (deliveryInputs[index]) inputsFilled++;
     }
-    const isDisabled =
-      currentStage == 1 ? inputsFilled !== deliveryInputs.length : false;
+
+    let isDisabled = false;
+
+    if (currentStage == 0) isDisabled = cartItems.length === 0;
+    else if (currentStage == 1)
+      isDisabled = inputsFilled !== deliveryInputs.length;
 
     const disabledStyle = isDisabled
       ? "bg-blue-300 text-gray-200"
@@ -214,7 +202,13 @@ export default function Cart() {
         {stageName}
       </button>
     );
-  }, [deliveryInputs, currentStage]);
+  }, [
+    cartItems.length,
+    currentStage,
+    deliveryInputs,
+    onNextCartStage,
+    stageName,
+  ]);
 
   const backButton = useMemo(() => {
     if (currentStage == 0) return <></>;
@@ -233,7 +227,19 @@ export default function Cart() {
         <p className="pr-2 text-white group-hover:text-blue-500">Back</p>
       </button>
     );
-  }, [currentStage]);
+  }, [currentStage, onPrevCartStage]);
+
+  const alertTitleText = useMemo(() => {
+    return (
+      <p className="mx-14 flex flex-col">
+        <p>Are you sure you want to delete:</p>
+        <span className="text-blue-800">
+          &apos; {product?.title ?? ""}&apos;{" "}
+        </span>
+        <p>item from cart?</p>
+      </p>
+    );
+  }, [product]);
 
   return (
     <div className=" flex h-full w-full flex-col items-center gap-12">
@@ -272,6 +278,15 @@ export default function Cart() {
           {totalPrice.toFixed(2)} $
         </p>
       </div>
+
+      <AlertPrompt
+        title={alertTitleText}
+        arg0="Yes"
+        arg1="No"
+        show={isAlertActive}
+        onClose={() => setIsAlertActive(false)}
+        onConfirm={() => removeItem(product)}
+      />
     </div>
   );
 }

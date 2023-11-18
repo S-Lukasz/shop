@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface Prop {
-  title: string;
+  title: ReactNode;
   arg0: string;
   arg1: string;
   show: boolean;

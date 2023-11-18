@@ -51,7 +51,7 @@ function AddToCart({ product }: Prop) {
           {"(" + product.rating.count + ")"}
         </Link>
       </div>
-      <div className="mt-20 flex gap-6">
+      <div className="mt-20 flex gap-6 sm:flex-col 2xl:flex-row">
         <select
           onChange={onAmountChange}
           className="bold text-md rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md"

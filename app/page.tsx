@@ -150,7 +150,9 @@ export default function Home() {
       </div>
       <div className="flex w-5/6 flex-col items-center bg-slate-100">
         <div className="my-12 flex w-5/6 flex-col gap-8">
-          {/* <p className="  text-2xl font-semibold mt-5">Our products:</p> */}
+          <p className="margin-auto mt-2 flex w-2/4 justify-center gap-2 rounded-lg bg-white p-4 text-center text-2xl font-semibold capitalize shadow-md ">
+            {currentCategory}
+          </p>
           {productItems}
         </div>
       </div>

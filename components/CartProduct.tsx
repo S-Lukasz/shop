@@ -68,7 +68,7 @@ export default function CartProduct({
         {getPrice().toFixed(2)} $
       </p>
       <button
-        onClick={() => onItemRemoveClick}
+        onClick={onItemRemoveClick}
         className="m-auto flex transform pr-2 text-gray-700 transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none"
       >
         <FontAwesomeIcon className="h-[24px] w-[24px]" icon={faTrash} />
