@@ -103,7 +103,7 @@ export default function Product({ product }: Prop) {
                 Show More
               </p>
               <FontAwesomeIcon
-                className="flext ml-2 h-[14px] w-[14px] pt-[5px] text-blue-400 transition-all duration-100 
+                className="ml-2 flex h-[14px] w-[14px] pt-[5px] text-blue-400 transition-all duration-100 
                 ease-out group-hover:scale-[1.2] group-hover:text-blue-800 motion-reduce:transform-none"
                 icon={faChevronRight}
               />

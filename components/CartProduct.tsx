@@ -7,22 +7,28 @@ import Image from "next/image";
 
 interface Prop {
   cartItem: CartItem;
+  setAlertPrompt: (isAlertActive: boolean) => void;
+  setAlertProduct: (product: Product) => void;
 }
 
-export default function Product({ cartItem }: Prop) {
+export default function CartProduct({
+  cartItem,
+  setAlertPrompt,
+  setAlertProduct,
+}: Prop) {
   const product = cartItem.product;
-  const { addItemToCart, setCartItems } = useContext(Context);
+  const { addItemToCart } = useContext(Context);
+
+  const onItemRemoveClick = () => {
+    setAlertProduct(product);
+    setAlertPrompt(true);
+  };
 
   const amounts = new Array(99).fill(0).map((_, i) => (
     <option key={"cartAmountKey_" + i} selected={cartItem.amount === i + 1}>
       {i + 1}
     </option>
   ));
-
-  const removeItem = () =>
-    setCartItems((cartItems) =>
-      cartItems.filter((item) => item.product.id !== cartItem.product.id),
-    );
 
   const onAmountChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const amountToAdd = parseInt(event.target.value) - cartItem.amount;
@@ -62,7 +68,7 @@ export default function Product({ cartItem }: Prop) {
         {getPrice().toFixed(2)} $
       </p>
       <button
-        onClick={removeItem}
+        onClick={() => onItemRemoveClick}
         className="m-auto flex transform pr-2 text-gray-700 transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none"
       >
         <FontAwesomeIcon className="h-[24px] w-[24px]" icon={faTrash} />
