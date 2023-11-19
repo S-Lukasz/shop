@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faBars } from "@fortawesome/free-solid-svg-icons";
 import { Context } from "@/components/ContextWrapper";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 
 interface Page {
   name: string;
@@ -12,7 +12,7 @@ interface Page {
 }
 
 export default function Header() {
-  const { cartItems } = useContext(Context);
+  const { cartItems, isNavEnabled, setNavView } = useContext(Context);
 
   const getItemsAmount = useMemo(() => {
     let result = 0;
@@ -31,19 +31,29 @@ export default function Header() {
     //   name: "About",
     //   path: "/about",
     // },
-    {
-      name: "Cart",
-      path: "/cart",
-    },
+    // {
+    //   name: "Cart",
+    //   path: "/cart",
+    // },
   ];
 
   return (
-    <header className="sticky top-0 z-10 flex w-full flex-col bg-white shadow-md">
+    <header className="sticky top-0 z-10 flex flex-col bg-white shadow-md">
       <div className="flex bg-gray-900 pt-5"></div>
 
       <div className="flex">
         <div className="flex h-16 items-center bg-white text-center ">
           <div className="flex items-center divide-x-2 divide-gray-300 text-center text-2xl font-bold ">
+            <button
+              className="group px-10 "
+              onClick={() => setNavView(!isNavEnabled)}
+            >
+              <FontAwesomeIcon
+                className="transform text-gray-700 transition-all duration-300 ease-out 
+                group-hover:scale-110 group-hover:text-blue-600 motion-reduce:transform-none"
+                icon={faBars}
+              />
+            </button>
             {PAGES.map((result, i) => (
               <Link
                 key={"pageKey_" + i}

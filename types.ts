@@ -20,8 +20,10 @@ export interface CartItem {
 
 export interface MainContext {
   isFetched: boolean;
+  isNavEnabled: boolean;
   cartItems: CartItem[];
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   setFetch: Dispatch<SetStateAction<boolean>>;
+  setNavView: Dispatch<SetStateAction<boolean>>;
   addItemToCart: (amount: number, product: Product) => void;
 }

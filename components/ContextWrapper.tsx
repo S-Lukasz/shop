@@ -5,9 +5,11 @@ import { MainContext, CartItem, Product } from "@/types";
 
 export const Context = createContext<MainContext>({
   isFetched: false,
+  isNavEnabled: true,
   cartItems: [],
   setCartItems: () => {},
   setFetch: () => {},
+  setNavView: () => {},
   addItemToCart: () => {},
 });
 
@@ -18,6 +20,7 @@ export default function RootLayout({
 }) {
   const maxAmount = 99;
   const [isFetched, setFetch] = useState(false);
+  const [isNavEnabled, setNavView] = useState(true);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const addItemToCart = (amount: number, product: Product) => {
@@ -42,7 +45,15 @@ export default function RootLayout({
 
   return (
     <Context.Provider
-      value={{ isFetched, cartItems, setCartItems, setFetch, addItemToCart }}
+      value={{
+        isFetched,
+        isNavEnabled,
+        cartItems,
+        setCartItems,
+        setFetch,
+        setNavView,
+        addItemToCart,
+      }}
     >
       {children}
     </Context.Provider>
