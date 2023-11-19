@@ -69,7 +69,7 @@ export default function Header() {
         </div>
 
         <Link href="/cart" className="group ml-auto mr-10 flex ">
-          <div className="my-4 mr-8 flex border-l-2 border-gray-300"></div>
+          <div className="my-4 mr-4 flex border-l-2 border-gray-300 lg:mx-6"></div>
           <div className="m-auto flex transform text-gray-700 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-blue-600 motion-reduce:transform-none ">
             <FontAwesomeIcon
               className="h-[28px] w-[28px]"

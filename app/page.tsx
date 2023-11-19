@@ -59,6 +59,8 @@ export default function Home() {
   useEffect(() => {
     setFetch(false);
 
+    console.log("innerWidth: " + window.innerWidth);
+
     const initialFetch = async () => {
       const promises = await Promise.all([
         fetch("https://fakestoreapi.com/products"),
@@ -113,7 +115,7 @@ export default function Home() {
   const navView = useMemo(() => {
     if (isNavEnabled) {
       return (
-        <div className="fixed left-0 z-[5] flex h-full w-full flex-col bg-blue-100 px-8 pt-10 md:relative md:w-80">
+        <div className="fixed left-0 z-[5] flex h-full w-full flex-col bg-blue-100 px-8 pt-10 lg:relative lg:w-80">
           <p className="text-lg font-bold">Categories</p>
           <ul>
             {categories.map((category, i) => (
@@ -171,9 +173,9 @@ export default function Home() {
   ]);
 
   return (
-    <div className="flex grow">
+    <div className="flex w-full grow">
       {navView}
-      <div className="flex flex-col bg-slate-100">
+      <div className="flex w-full flex-col bg-slate-100">
         <div className="my-12 flex w-full flex-col items-center justify-center gap-8">
           <p className="m-auto mt-2 flex w-2/3 justify-center gap-2 rounded-lg bg-white p-4 text-center text-2xl font-semibold capitalize shadow-md lg:w-2/4 ">
             {currentCategory}

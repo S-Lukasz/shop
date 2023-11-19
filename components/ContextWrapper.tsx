@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { MainContext, CartItem, Product } from "@/types";
 
 export const Context = createContext<MainContext>({
@@ -42,6 +42,10 @@ export default function RootLayout({
 
     setCartItems([cartItem, ...cartItems]);
   };
+
+  useEffect(() => {
+    setNavView(window.innerWidth > 1024);
+  }, []);
 
   return (
     <Context.Provider
