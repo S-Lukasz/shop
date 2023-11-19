@@ -5,6 +5,7 @@ import { MainContext, CartItem, Product } from "@/types";
 
 export const Context = createContext<MainContext>({
   isFetched: false,
+  isMobileView: false,
   isNavEnabled: true,
   cartItems: [],
   setCartItems: () => {},
@@ -20,7 +21,8 @@ export default function RootLayout({
 }) {
   const maxAmount = 99;
   const [isFetched, setFetch] = useState(false);
-  const [isNavEnabled, setNavView] = useState(true);
+  const [isNavEnabled, setNavView] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const addItemToCart = (amount: number, product: Product) => {
@@ -44,13 +46,16 @@ export default function RootLayout({
   };
 
   useEffect(() => {
-    setNavView(window.innerWidth > 1024);
+    const isMobileView = window.innerWidth < 1024;
+    setIsMobileView(isMobileView);
+    setNavView(!isMobileView);
   }, []);
 
   return (
     <Context.Provider
       value={{
         isFetched,
+        isMobileView,
         isNavEnabled,
         cartItems,
         setCartItems,
