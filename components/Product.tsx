@@ -86,7 +86,7 @@ export default function Product({ product }: Prop) {
             className="my-8 flex flex-shrink-0 flex-grow-0 justify-center bg-white xl:my-0 xl:ml-4 xl:h-[12rem] xl:w-[12rem]"
           >
             <Image
-              className=" img_class flex rounded-lg object-contain object-center p-2 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none"
+              className="img_class flex rounded-lg object-contain object-center p-2 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none"
               loader={() => product.image}
               src={product.image}
               width={120}
