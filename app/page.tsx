@@ -13,6 +13,8 @@ import {
 import { Product as ProductType } from "@/types";
 import Product from "@/components/Product";
 import { Context } from "@/components/ContextWrapper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 interface Prop {
   currentCategory: string;
@@ -203,8 +205,20 @@ export default function Home() {
       />
       <div className="flex w-full flex-col bg-slate-100">
         <div className="my-12 flex w-full flex-col items-center justify-center gap-8">
-          <p className="m-auto mt-2 flex w-2/3 justify-center gap-2 rounded-lg bg-white p-4 text-center text-2xl font-semibold capitalize shadow-md lg:w-2/4 ">
-            {currentCategory}
+          <p className="m-auto mt-2 flex w-4/5 flex-col gap-2 rounded-lg bg-white p-4 text-2xl font-semibold capitalize shadow-md lg:w-2/4 xl:p-8 ">
+            <p>{currentCategory}</p>
+            <div className="group flex items-center gap-4">
+              <input
+                // onInput={(e) => onMinPriceChanged(e)}
+                className="bold text-md my-2 w-10/12 rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-2/6"
+                placeholder="Search"
+                type="text"
+              />
+              <FontAwesomeIcon
+                className=" text-gray-800 group-hover:text-blue-500"
+                icon={faMagnifyingGlass}
+              />
+            </div>
           </p>
           {productItems}
         </div>

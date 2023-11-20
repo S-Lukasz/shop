@@ -5,8 +5,8 @@ import { MainContext, CartItem, Product } from "@/types";
 
 export const Context = createContext<MainContext>({
   isFetched: false,
-  isMobileView: false,
   isNavEnabled: true,
+  isMobileView: false,
   cartItems: [],
   setCartItems: () => {},
   setFetch: () => {},
@@ -55,8 +55,8 @@ export default function RootLayout({
     <Context.Provider
       value={{
         isFetched,
-        isMobileView,
         isNavEnabled,
+        isMobileView,
         cartItems,
         setCartItems,
         setFetch,

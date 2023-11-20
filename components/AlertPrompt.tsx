@@ -20,8 +20,8 @@ export default function AlertPrompt({
   if (show)
     return (
       <div className="fixed z-30 flex h-full w-full bg-black/30 backdrop-blur-sm">
-        <div className="mx-auto mt-32 flex h-min w-1/3 flex-col items-center gap-6 rounded-md bg-white text-center text-lg font-semibold shadow-md">
-          <p className="mx-10 mt-10">{title}</p>
+        <div className="mx-auto mt-32 flex h-min w-4/5 flex-col items-center gap-6 rounded-md bg-white text-center text-lg font-semibold shadow-md xl:w-1/3">
+          <p className="mt-10 xl:mx-10">{title}</p>
           <div className="mb-10 flex">
             <button
               onClick={onConfirm}

@@ -84,7 +84,7 @@ export default function Cart() {
       ));
     } else {
       return (
-        <div className="flex w-full gap-2 rounded-lg bg-white p-6 pl-4 shadow-md ">
+        <div className="flex w-full gap-2 rounded-lg bg-white px-6 py-10 pl-4 shadow-md ">
           <p className=" m-auto line-clamp-1 h-[1lh] text-xl font-semibold">
             No items in cart
           </p>
@@ -145,14 +145,18 @@ export default function Cart() {
 
   const stageView = useMemo(() => {
     if (currentStage === 0) {
-      return <div className=" flex w-1/2 flex-col gap-8 ">{productItems}</div>;
+      return (
+        <div className=" flex w-4/5 flex-col gap-8 xl:w-2/5 ">
+          {productItems}
+        </div>
+      );
     } else if (currentStage === 1) {
       const deliveryResult = DELIVERY_DATA.map((result, i) => {
         return (
           <input
             onInput={(e) => onInputChange(e, i)}
             key={"deliveryResultKey_" + i}
-            className="bold text-md w-1/3 rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md"
+            className="bold text-md w-4/5 rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md xl:w-1/3"
             placeholder={result.data}
             type={result.type}
           />
@@ -160,7 +164,7 @@ export default function Cart() {
       });
 
       return (
-        <div className="flex w-1/2 flex-col items-center justify-center gap-4 rounded-lg bg-white pb-8 pt-6 text-center font-semibold shadow-md">
+        <div className="flex w-4/5 flex-col items-center justify-center gap-4 rounded-lg bg-white pb-8 pt-6 text-center font-semibold shadow-md xl:w-1/2">
           <p>Delivery Information</p>
           {deliveryResult}
         </div>
@@ -169,7 +173,7 @@ export default function Cart() {
       const clearInputs = DELIVERY_DATA.map(() => "");
       setDeliveryInput(clearInputs);
       return (
-        <div className="flex w-1/2 justify-center rounded-lg bg-white py-6 text-center font-semibold shadow-md">
+        <div className="flex w-4/5 justify-center rounded-lg bg-white py-6 text-center font-semibold shadow-md xl:w-1/2">
           PAYMENT
         </div>
       );
@@ -196,8 +200,8 @@ export default function Cart() {
       <button
         onClick={onNextCartStage}
         disabled={isDisabled}
-        className={`${disabledStyle} bold text-md m-auto flex rounded-lg px-8 py-1
-        text-center font-semibold shadow-md`}
+        className={`${disabledStyle} xl:order-0 bold text-md order-[-1] m-auto flex justify-center rounded-lg px-8 py-1 text-center
+        font-semibold shadow-md xl:w-1/5`}
       >
         {stageName}
       </button>
@@ -216,8 +220,8 @@ export default function Cart() {
     return (
       <button
         onClick={onPrevCartStage}
-        className="bold text-md group m-auto flex items-center justify-center gap-2 rounded-lg
-        bg-blue-500 px-8 py-1 text-center font-semibold  shadow-md transition-all 
+        className="bold text-md group order-[-2] m-auto flex items-center justify-center gap-2 rounded-lg
+        bg-blue-500 px-8 py-1 text-center font-semibold shadow-md transition-all 
         duration-300 ease-out hover:scale-[1.1] hover:bg-white motion-reduce:transform-none"
       >
         <FontAwesomeIcon
@@ -231,7 +235,7 @@ export default function Cart() {
 
   const alertTitleText = useMemo(() => {
     return (
-      <p className="mx-14 flex flex-col">
+      <p className="mx-4 flex flex-col xl:mx-14">
         <p>Are you sure you want to delete:</p>
         <span className="text-blue-800">
           &apos; {product?.title ?? ""}&apos;{" "}
@@ -242,8 +246,8 @@ export default function Cart() {
   }, [product]);
 
   return (
-    <div className=" flex h-full w-full flex-col items-center gap-12">
-      <div className="mt-20 flex h-min w-1/2 divide-x-2 divide-gray-400 rounded-lg bg-white p-6 text-center shadow-md">
+    <div className="mb-16 flex h-full w-full flex-col items-center gap-12">
+      <div className="mt-20 flex h-min w-2/3 divide-x-2 divide-gray-400 rounded-lg bg-white p-6 text-center shadow-md xl:w-1/2">
         {ORDER_STAGE.map((result, i) => {
           const stageIdColor =
             i == currentStage
@@ -260,7 +264,7 @@ export default function Cart() {
               >
                 {result.id}
               </div>
-              <p className="line-clamp-1 flex h-[1lh] text-xl font-semibold">
+              <p className="line-clamp-1 hidden h-[1lh] text-xl font-semibold xl:flex ">
                 {result.name}
               </p>
             </div>
@@ -268,15 +272,17 @@ export default function Cart() {
         })}
       </div>
       {stageView}
-      <div className="flex w-1/2 justify-end gap-16 rounded-lg bg-white p-6 pl-4 pr-28 shadow-md">
+      <div className=" flex w-4/5 flex-col items-center gap-4 rounded-lg bg-white p-4 shadow-md xl:w-1/2 xl:flex-row xl:justify-end xl:gap-16 xl:p-6 xl:pl-4 xl:pr-28">
         {backButton}
         {stageButton}
-        <p className=" pr- line-clamp-1 h-[1lh] text-xl font-semibold">
-          Total price:
-        </p>
-        <p className=" pr- line-clamp-1 h-[1lh] text-xl font-semibold">
-          {totalPrice.toFixed(2)} $
-        </p>
+        <div className="flex flex-row xl:flex-col">
+          <p className="line-clamp-1 h-[1lh] pr-2 text-xl font-semibold">
+            Total price:
+          </p>
+          <p className="line-clamp-1 h-[1lh] text-xl font-semibold">
+            {totalPrice.toFixed(2)} $
+          </p>
+        </div>
       </div>
 
       <AlertPrompt

@@ -80,7 +80,7 @@ export default function Product({ product }: Prop) {
         >
           {product.title}
         </Link>
-        <div className="flex flex-col gap-4 xl:flex-row">
+        <div className="mb-0 flex flex-col gap-4 xl:mb-6 xl:flex-row">
           <Link
             href={`/products/${product.id}`}
             className="my-8 flex flex-shrink-0 flex-grow-0 justify-center bg-white xl:my-0 xl:ml-4 xl:h-[12rem] xl:w-[12rem]"
