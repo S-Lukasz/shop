@@ -15,6 +15,7 @@ import Product from "@/components/Product";
 import { Context } from "@/components/ContextWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import WindowContainer from "@/components/WindowContainer";
 
 interface Prop {
   currentCategory: string;
@@ -88,7 +89,7 @@ function NavView({
   if (!isNavEnabled) return <></>;
 
   return (
-    <div className="fixed left-0 z-[5] flex h-full w-full flex-col bg-blue-100 px-8 pt-10 lg:relative lg:w-80">
+    <div className="fixed left-0 z-[5] flex h-full w-full flex-col gap-4 bg-blue-100 px-8 pt-10 lg:relative lg:w-80">
       <p className="text-lg font-bold">Categories</p>
       <ul>
         {categories.map((category, i) => (
@@ -109,7 +110,7 @@ function NavView({
           </li>
         ))}
       </ul>
-      <p className="mt-4text-lg font-bold">Price</p>
+      <p className="text-lg font-bold">Price</p>
       <div className="flex items-center gap-4 pl-4 pt-2">
         <input
           onInput={(e) => onMinPriceChanged(e)}
@@ -131,8 +132,7 @@ function NavView({
           onPriceFilter();
           if (isMobileView) setNavView(false);
         }}
-        className="bold text-md mx-12 mt-10 flex w-32 justify-center rounded-lg bg-blue-500 px-4 py-1 text-center font-semibold 
-      text-white shadow-md transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-white hover:text-blue-500 motion-reduce:transform-none"
+        className="btn-primary bold text-md mx-12 mt-10 flex w-32 justify-center px-4 py-1 font-semibold "
       >
         FILTER
       </button>
@@ -154,11 +154,11 @@ export default function Home() {
 
     if (productsToDisplay.length == 0) {
       return (
-        <div className="flex w-2/3 gap-2 rounded-lg bg-white p-6 pl-4 shadow-md ">
-          <p className=" m-auto line-clamp-1 h-[1lh] text-xl font-semibold">
-            There is no available result for current search filters.
+        <WindowContainer className="flex w-2/3 gap-2 p-6 pl-4">
+          <p className="m-auto line-clamp-1 h-[1lh] text-xl font-semibold">
+            There is no available result for current search.
           </p>
-        </div>
+        </WindowContainer>
       );
     }
 
@@ -204,24 +204,26 @@ export default function Home() {
         setFilteredItems={setFilteredItems}
       />
       <div className="flex w-full flex-col bg-slate-100">
-        <div className="my-12 flex w-full flex-col items-center justify-center gap-8">
-          <div className="m-auto mt-2 flex w-4/5 flex-col gap-2 rounded-lg bg-white p-4 text-2xl font-semibold capitalize shadow-md lg:w-2/4 xl:flex-row xl:items-center xl:p-8 ">
+        <div className="my-12 flex w-full flex-col items-center justify-start gap-8">
+          <WindowContainer className="mt-2 flex w-4/5 flex-col gap-2 p-4 text-2xl font-semibold capitalize lg:w-4/5 xl:flex-row xl:items-center xl:p-6 ">
             <p className="text-center xl:mr-4 xl:border-r-2 xl:border-gray-300 xl:pr-4 xl:text-left">
               {currentCategory}
             </p>
-            <div className="group flex items-center gap-4">
+            <div className="flex items-center gap-4">
               <input
                 // onInput={(e) => onMinPriceChanged(e)}
                 className="bold text-md my-2 w-10/12 rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-3/5"
                 placeholder="Search"
                 type="text"
               />
-              <FontAwesomeIcon
-                className=" text-gray-800 group-hover:text-blue-500"
-                icon={faMagnifyingGlass}
-              />
+              <button className="btn-primary group flex bg-blue-100 hover:bg-blue-500">
+                <FontAwesomeIcon
+                  className="h-4 w-4 p-2 text-gray-800 group-hover:text-white"
+                  icon={faMagnifyingGlass}
+                />
+              </button>
             </div>
-          </div>
+          </WindowContainer>
           {productItems}
         </div>
       </div>

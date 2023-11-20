@@ -25,15 +25,13 @@ export default function AlertPrompt({
           <div className="mb-10 flex">
             <button
               onClick={onConfirm}
-              className="bold text-md mx-12 flex rounded-lg bg-blue-500 px-4 py-1 text-center font-semibold text-white 
-        shadow-md transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-white hover:text-blue-500 motion-reduce:transform-none"
+              className="btn-primary bold text-md mx-12 flex px-4 py-1 font-semibold"
             >
               {arg0}
             </button>
             <button
               onClick={onClose}
-              className="bold text-md mx-12 flex rounded-lg bg-blue-500 px-4 py-1 text-center font-semibold text-white 
-        shadow-md transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-white hover:text-blue-500 motion-reduce:transform-none"
+              className="btn-primary bold text-md mx-12 flex px-4 py-1 font-semibold"
             >
               {arg1}
             </button>

@@ -5,6 +5,7 @@ import { faChevronRight, faStar } from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, useContext, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import WindowContainer from "./WindowContainer";
 
 interface Prop {
   product: Product;
@@ -38,8 +39,8 @@ function AddToCart({ product }: Prop) {
   };
 
   return (
-    <div className="flex w-4/5 flex-col items-center justify-center rounded-lg bg-white py-8 shadow-none xl:h-full xl:w-1/3 xl:py-2 xl:shadow-md">
-      <p className="bold flex text-center text-xl font-semibold  ">
+    <WindowContainer className="flex w-4/5 flex-col items-center justify-center py-8 shadow-none xl:h-full xl:w-1/3 xl:py-2 xl:shadow-md">
+      <p className="bold flex text-center text-xl font-semibold">
         Price: {product.price} $
       </p>
       <div className="flex items-center gap-2">
@@ -60,20 +61,19 @@ function AddToCart({ product }: Prop) {
         </select>
         <button
           onClick={() => addItemToCart(amount, product)}
-          className="bold text-md flex rounded-lg bg-blue-500 px-8 py-1 text-center font-semibold 
-            text-white shadow-md transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-slate-200 hover:text-blue-500 motion-reduce:transform-none"
+          className="btn-primary bold text-md flex px-8 py-1 font-semibold hover:bg-blue-100"
         >
           ADD TO CART
         </button>
       </div>
-    </div>
+    </WindowContainer>
   );
 }
 
 export default function Product({ product }: Prop) {
   return (
-    <div className="flex w-4/5 flex-col items-center justify-center rounded-lg bg-white shadow-md xl:mx-0 xl:w-full xl:flex-row xl:items-start xl:gap-8 xl:rounded-none xl:bg-transparent xl:shadow-none">
-      <div className="flex w-full flex-col rounded-lg bg-white shadow-none xl:w-2/4 xl:shadow-md ">
+    <WindowContainer className="flex w-4/5 flex-col items-center justify-center xl:mx-0 xl:w-full xl:flex-row xl:items-start xl:gap-8 xl:rounded-none xl:bg-transparent xl:shadow-none">
+      <WindowContainer className="flex w-full flex-col shadow-none xl:w-2/4 xl:shadow-md ">
         <Link
           href={`/products/${product.id}`}
           className=" m-4 line-clamp-1 h-[1lh] text-xl font-semibold text-gray-600 transition-all duration-100 hover:text-black"
@@ -113,9 +113,9 @@ export default function Product({ product }: Prop) {
             </Link>
           </div>
         </div>
-      </div>
+      </WindowContainer>
 
       <AddToCart product={product} />
-    </div>
+    </WindowContainer>
   );
 }

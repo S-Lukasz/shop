@@ -1,8 +1,9 @@
 "use client";
 
 import {
+  Dispatch,
   FormEvent,
-  HTMLInputTypeAttribute,
+  SetStateAction,
   useContext,
   useEffect,
   useMemo,
@@ -11,53 +12,63 @@ import {
 import { Context } from "@/components/ContextWrapper";
 import CartProduct from "@/components/CartProduct";
 import AlertPrompt from "@/components/AlertPrompt";
+import WindowContainer from "@/components/WindowContainer";
 import { Product } from "@/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { DELIVERY_DATA, ORDER_STAGE } from "@/consts";
 
-interface OrderStage {
-  id: number;
-  name: string;
+interface Prop {
+  currentStage: number;
+  productItems: JSX.Element;
+  setDeliveryInput: Dispatch<SetStateAction<string[]>>;
 }
 
-interface DeliveryData {
-  data: string;
-  type: HTMLInputTypeAttribute;
+function StageView({ currentStage, productItems, setDeliveryInput }: Prop) {
+  const onInputChange = (e: FormEvent<HTMLInputElement>, index: number) => {
+    const target = e.target as HTMLInputElement;
+
+    setDeliveryInput((inputs) =>
+      inputs.map((result, i) => {
+        if (i === index) return target.value;
+        return result;
+      }),
+    );
+  };
+
+  if (currentStage === 0) {
+    return (
+      <div className=" flex w-4/5 flex-col gap-8 xl:w-2/5 ">{productItems}</div>
+    );
+  } else if (currentStage === 1) {
+    const deliveryResult = DELIVERY_DATA.map((result, i) => {
+      return (
+        <input
+          onInput={(e) => onInputChange(e, i)}
+          key={"deliveryResultKey_" + i}
+          className="bold text-md w-4/5 rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md xl:w-1/3"
+          placeholder={result.data}
+          type={result.type}
+        />
+      );
+    });
+
+    return (
+      <WindowContainer className="flex w-4/5 flex-col items-center justify-center gap-4 pb-8 pt-6 text-center font-semibold xl:w-1/2">
+        <p>Delivery Information</p>
+        {deliveryResult}
+      </WindowContainer>
+    );
+  } else if (currentStage === 2) {
+    const clearInputs = DELIVERY_DATA.map(() => "");
+    setDeliveryInput(clearInputs);
+    return (
+      <WindowContainer className="flex w-4/5 justify-center py-6 text-center font-semibold xl:w-1/2">
+        PAYMENT
+      </WindowContainer>
+    );
+  }
 }
-
-const DELIVERY_DATA: DeliveryData[] = [
-  {
-    data: "First Name",
-    type: "text",
-  },
-  {
-    data: "Last Name",
-    type: "text",
-  },
-  {
-    data: "E-mail",
-    type: "email",
-  },
-  {
-    data: "Address",
-    type: "text",
-  },
-];
-
-const ORDER_STAGE: OrderStage[] = [
-  {
-    id: 1,
-    name: "Cart",
-  },
-  {
-    id: 2,
-    name: "Delivery",
-  },
-  {
-    id: 3,
-    name: "Payment",
-  },
-];
 
 export default function Cart() {
   const [currentStage, setCurrentStage] = useState(0);
@@ -68,27 +79,27 @@ export default function Cart() {
     DELIVERY_DATA.map(() => ""),
   );
 
-  useEffect(() => {
-    console.log("currentStage: " + currentStage);
-  }, [currentStage]);
-
   const productItems = useMemo(() => {
     if (cartItems.length > 0) {
-      return cartItems.map((item) => (
-        <CartProduct
-          key={"productKey_" + item.product.id}
-          setAlertPrompt={setIsAlertActive}
-          setAlertProduct={setAlertProduct}
-          cartItem={item}
-        ></CartProduct>
-      ));
+      return (
+        <>
+          {cartItems.map((item) => (
+            <CartProduct
+              key={"productKey_" + item.product.id}
+              setAlertPrompt={setIsAlertActive}
+              setAlertProduct={setAlertProduct}
+              cartItem={item}
+            ></CartProduct>
+          ))}
+        </>
+      );
     } else {
       return (
-        <div className="flex w-full gap-2 rounded-lg bg-white px-6 py-10 pl-4 shadow-md ">
+        <WindowContainer className="flex w-full gap-2 px-6 py-10 pl-4">
           <p className=" m-auto line-clamp-1 h-[1lh] text-xl font-semibold">
             No items in cart
           </p>
-        </div>
+        </WindowContainer>
       );
     }
   }, [cartItems]);
@@ -132,54 +143,6 @@ export default function Cart() {
     setCurrentStage(currentStage - 1);
   };
 
-  const onInputChange = (e: FormEvent<HTMLInputElement>, index: number) => {
-    const target = e.target as HTMLInputElement;
-
-    setDeliveryInput((inputs) =>
-      inputs.map((result, i) => {
-        if (i === index) return target.value;
-        return result;
-      }),
-    );
-  };
-
-  const stageView = useMemo(() => {
-    if (currentStage === 0) {
-      return (
-        <div className=" flex w-4/5 flex-col gap-8 xl:w-2/5 ">
-          {productItems}
-        </div>
-      );
-    } else if (currentStage === 1) {
-      const deliveryResult = DELIVERY_DATA.map((result, i) => {
-        return (
-          <input
-            onInput={(e) => onInputChange(e, i)}
-            key={"deliveryResultKey_" + i}
-            className="bold text-md w-4/5 rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md xl:w-1/3"
-            placeholder={result.data}
-            type={result.type}
-          />
-        );
-      });
-
-      return (
-        <div className="flex w-4/5 flex-col items-center justify-center gap-4 rounded-lg bg-white pb-8 pt-6 text-center font-semibold shadow-md xl:w-1/2">
-          <p>Delivery Information</p>
-          {deliveryResult}
-        </div>
-      );
-    } else if (currentStage === 2) {
-      const clearInputs = DELIVERY_DATA.map(() => "");
-      setDeliveryInput(clearInputs);
-      return (
-        <div className="flex w-4/5 justify-center rounded-lg bg-white py-6 text-center font-semibold shadow-md xl:w-1/2">
-          PAYMENT
-        </div>
-      );
-    }
-  }, [currentStage, productItems]);
-
   const stageButton = useMemo(() => {
     let inputsFilled = 0;
     for (let index = 0; index < deliveryInputs.length; index++) {
@@ -194,7 +157,7 @@ export default function Cart() {
 
     const disabledStyle = isDisabled
       ? "bg-blue-300 text-gray-200"
-      : "bg-blue-500 text-white transition-all duration-300 ease-out hover:scale-[1.1] hover:bg-white hover:text-blue-500 motion-reduce:transform-none";
+      : "btn-primary ";
 
     return (
       <button
@@ -220,9 +183,7 @@ export default function Cart() {
     return (
       <button
         onClick={onPrevCartStage}
-        className="bold text-md group order-[-2] m-auto flex items-center justify-center gap-2 rounded-lg
-        bg-blue-500 px-8 py-1 text-center font-semibold shadow-md transition-all 
-        duration-300 ease-out hover:scale-[1.1] hover:bg-white motion-reduce:transform-none"
+        className="btn-primary bold text-md group order-[-2] m-auto flex items-center justify-center gap-2 px-8 py-1 font-semibold"
       >
         <FontAwesomeIcon
           className="h-[14px] w-[14px] text-white group-hover:text-blue-500"
@@ -247,7 +208,7 @@ export default function Cart() {
 
   return (
     <div className="mb-16 flex h-full w-full flex-col items-center gap-12">
-      <div className="mt-20 flex h-min w-2/3 divide-x-2 divide-gray-400 rounded-lg bg-white p-6 text-center shadow-md xl:w-1/2">
+      <WindowContainer className="mt-20 flex h-min w-2/3 divide-x-2 divide-gray-400 p-6 text-center xl:w-1/2">
         {ORDER_STAGE.map((result, i) => {
           const stageIdColor =
             i == currentStage
@@ -270,12 +231,16 @@ export default function Cart() {
             </div>
           );
         })}
-      </div>
-      {stageView}
-      <div className=" flex w-4/5 flex-col items-center gap-4 rounded-lg bg-white p-4 shadow-md xl:w-1/2 xl:flex-row xl:justify-end xl:gap-16 xl:p-6 xl:pl-4 xl:pr-28">
+      </WindowContainer>
+      <StageView
+        currentStage={currentStage}
+        productItems={productItems}
+        setDeliveryInput={setDeliveryInput}
+      />
+      <WindowContainer className="flex w-4/5 flex-col items-center gap-4 p-4 xl:w-1/2 xl:flex-row xl:justify-end xl:gap-16 xl:p-6 xl:pl-4 xl:pr-28">
         {backButton}
         {stageButton}
-        <div className="flex flex-row xl:flex-col">
+        <div className="flex flex-row">
           <p className="line-clamp-1 h-[1lh] pr-2 text-xl font-semibold">
             Total price:
           </p>
@@ -283,7 +248,7 @@ export default function Cart() {
             {totalPrice.toFixed(2)} $
           </p>
         </div>
-      </div>
+      </WindowContainer>
 
       <AlertPrompt
         title={alertTitleText}

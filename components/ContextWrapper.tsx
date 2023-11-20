@@ -46,9 +46,16 @@ export default function RootLayout({
   };
 
   useEffect(() => {
-    const isMobileView = window.innerWidth < 1024;
-    setIsMobileView(isMobileView);
-    setNavView(!isMobileView);
+    const handleResize = () => {
+      const isMobileView = window.innerWidth < 1024;
+      setIsMobileView(isMobileView);
+      setNavView(!isMobileView);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
