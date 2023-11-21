@@ -8,12 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import WindowContainer from "@/components/WindowContainer";
 import Image from "next/image";
 import Link from "next/link";
+import { renderIntoDocument } from "react-dom/test-utils";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const amounts = new Array(99)
     .fill(0)
     .map((_, i) => <option key={"amountKey_" + i}>{i + 1}</option>);
-  const { setFetch, addItemToCart } = useContext(Context);
+  const { setFetch, addItemToCart, isMobileView } = useContext(Context);
 
   const [product, setProduct] = useState<ProductType>();
   const [categoryProducts, setCategoryProducts] = useState<ProductType[]>([]);
@@ -111,7 +112,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
                 <div className="mt-4 flex w-full flex-col justify-center gap-6 xl:mt-12">
                   <p className="text-line m-auto flex gap-4 text-center text-3xl font-bold">
-                    <p className="text-gray-600  line-through">
+                    <p className="text-2xl text-gray-600 line-through">
                       {((product?.price ?? 1) * 1.2).toFixed(2)} $
                     </p>
                     <p>{product?.price} $</p>
@@ -139,17 +140,17 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white py-12 shadow-md">
               <p className="flex w-full divide-x-2 divide-gray-600 text-center text-xl font-semibold capitalize">
-                <button className="flex grow items-center justify-center capitalize text-blue-500">
+                <div className="flex grow items-center justify-center capitalize text-blue-500">
                   Description
-                </button>
-                <button className="flex grow items-center justify-center capitalize text-gray-500 hover:text-blue-500">
+                </div>
+                <div className="flex grow items-center justify-center capitalize text-gray-500 ">
                   Details
-                </button>
-                <button className="flex grow items-center justify-center capitalize text-gray-500 hover:text-blue-500">
+                </div>
+                <div className="flex grow items-center justify-center capitalize text-gray-500 ">
                   Opinions
-                </button>
+                </div>
               </p>
-              <p className="border-t-2 border-gray-300 px-14 pt-6 text-xl capitalize xl:mx-6">
+              <p className="mx-6 border-t-2 border-gray-300 px-14 pt-6 text-xl capitalize">
                 {product?.description}
               </p>
             </div>
@@ -162,6 +163,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <div className="mt-4 flex w-full items-center xl:mt-6 ">
             {categoryProducts.map((product, i) => {
+              if (isMobileView && i >= 3) return;
               return (
                 <Link
                   key={"categoryProductKey_" + i}

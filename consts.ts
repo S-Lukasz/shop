@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   IconDefinition,
   faSortDown,
@@ -41,7 +40,7 @@ export const SORTING_OPTIONS: SortingOption[] = [
         .sort((productA, productB) => productB.price - productA.price),
   },
   {
-    name: "Rating To Low",
+    name: "Rating To High",
     faIcon: faSortDown,
     sortResult: (products: ProductType[]) =>
       products
@@ -51,7 +50,7 @@ export const SORTING_OPTIONS: SortingOption[] = [
         ),
   },
   {
-    name: "Rating To High",
+    name: "Rating To Low",
     faIcon: faSortDown,
     sortResult: (products: ProductType[]) =>
       products
