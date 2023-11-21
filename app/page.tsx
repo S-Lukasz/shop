@@ -25,6 +25,7 @@ interface Prop {
   setCategory: Dispatch<SetStateAction<string>>;
   setProducts: Dispatch<SetStateAction<ProductType[]>>;
   setFilteredItems: Dispatch<SetStateAction<ProductType[]>>;
+  setSearchLabelValue: Dispatch<SetStateAction<string>>;
 }
 
 function NavView({
@@ -35,6 +36,7 @@ function NavView({
   setProducts,
   setCategory,
   setFilteredItems,
+  setSearchLabelValue,
 }: Prop) {
   const { isMobileView, isNavEnabled, setNavView } = useContext(Context);
   const [minPrice, setMinPrice] = useState(0);
@@ -64,6 +66,7 @@ function NavView({
     const categoryProducts = await result.json();
 
     setFilter(false);
+    setSearchLabelValue("");
     setProducts(categoryProducts);
     setCategory(category);
   };
@@ -71,19 +74,11 @@ function NavView({
   const onMinPriceChanged = (e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setMinPrice(parseInt(target.value));
-
-    console.log(
-      "useCallback onPriceFilter: " + minPrice + " maxPrice: " + maxPrice,
-    );
   };
 
   const onMaxPriceChanged = (e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setMaxPrice(parseInt(target.value));
-
-    console.log(
-      "useCallback onPriceFilter: " + minPrice + " maxPrice: " + maxPrice,
-    );
   };
 
   if (!isNavEnabled) return <></>;
@@ -147,6 +142,7 @@ export default function Home() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [currentCategory, setCategory] = useState("All");
+  const [searchLabelValue, setSearchLabelValue] = useState<string>("");
   const [isFilterSet, setFilter] = useState(false);
 
   const productItems = useMemo(() => {
@@ -192,6 +188,30 @@ export default function Home() {
     initialFetch();
   }, []);
 
+  const onSearchLabelChange = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setSearchLabelValue(target.value.toString());
+  };
+
+  const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      onSearchClick();
+    }
+  };
+
+  const onSearchClick = useCallback(() => {
+    if (searchLabelValue === null) return products;
+
+    const productsFiltered = products.filter((product) => {
+      const title = product.title.toLowerCase();
+      const contains = title.includes(searchLabelValue.toLowerCase());
+      if (contains) return title;
+    });
+
+    setFilteredItems(productsFiltered);
+    setFilter(true);
+  }, [products, searchLabelValue]);
+
   return (
     <div className="flex w-full grow">
       <NavView
@@ -202,6 +222,7 @@ export default function Home() {
         setProducts={setProducts}
         setCategory={setCategory}
         setFilteredItems={setFilteredItems}
+        setSearchLabelValue={setSearchLabelValue}
       />
       <div className="flex w-full flex-col bg-slate-100">
         <div className="my-12 flex w-full flex-col items-center justify-start gap-8">
@@ -211,12 +232,17 @@ export default function Home() {
             </p>
             <div className="flex items-center gap-4">
               <input
-                // onInput={(e) => onMinPriceChanged(e)}
+                onInput={(e) => onSearchLabelChange(e)}
                 className="bold text-md my-2 w-10/12 rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-3/5"
                 placeholder="Search"
                 type="text"
+                onKeyUp={(e) => onKeyUp(e)}
+                value={searchLabelValue}
               />
-              <button className="btn-primary group flex bg-blue-100 hover:bg-blue-500">
+              <button
+                onClick={onSearchClick}
+                className="btn-primary group flex bg-blue-100 hover:bg-blue-500"
+              >
                 <FontAwesomeIcon
                   className="h-4 w-4 p-2 text-gray-800 group-hover:text-white"
                   icon={faMagnifyingGlass}

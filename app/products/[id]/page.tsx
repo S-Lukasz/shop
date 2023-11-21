@@ -65,9 +65,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   return (
     // product ? <Product product={product}></Product> : <p>No item available</p>
-    <div className="m-auto flex w-full flex-col justify-center gap-4 py-12">
+    <div className="m-auto flex w-full flex-col justify-center gap-4 py-12 xl:w-3/5">
       <div className="flex justify-center">
-        <p className="margin-auto text-md flex w-11/12 gap-2 rounded-lg bg-white p-4 pl-6 font-medium capitalize shadow-md xl:w-4/5 ">
+        <p className="text-md m-auto flex w-11/12 gap-2 rounded-lg bg-white p-4 pl-6 font-medium capitalize shadow-md  ">
           <Link href={"/"} className="text-gray-500 hover:text-blue-500">
             menu
           </Link>
@@ -82,24 +82,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         </p>
       </div>
       <div className=" flex h-full w-full flex-col items-center justify-center">
-        <div className="m-auto flex h-full w-11/12 flex-col items-center justify-center gap-4 xl:flex-row">
-          <WindowContainer className="flex h-full justify-center">
-            <Image
-              className=" flex flex-shrink-0 flex-grow-0 rounded-lg bg-white object-contain object-center p-20"
-              loader={() => product?.image ?? ""}
-              src={product?.image ?? ""}
-              height={380}
-              width={380}
-              alt="proj"
-            />
-          </WindowContainer>
-
-          <div className="flex flex-col gap-4 xl:w-3/5">
+        <div className="m-auto flex w-11/12 flex-col items-center justify-center gap-4 xl:flex-row">
+          <div className="flex flex-col gap-4 ">
             <div className="flex w-full">
-              <div className="h-full w-full rounded-lg bg-white pb-8 shadow-md">
+              <WindowContainer className="h-full w-full pb-8 ">
                 <p className=" m-4 text-2xl font-semibold">{product?.title}</p>
 
-                <div className=" ml-6 flex h-2 items-center gap-2">
+                <div className=" ml-6 flex h-2 items-center gap-2 ">
                   <p className=" flex text-lg font-semibold  ">{rateStars}</p>
                   <Link
                     href="/"
@@ -109,9 +98,23 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   </Link>
                 </div>
 
-                <div className="mt-12 flex w-full flex-col justify-center gap-6">
-                  <p className="m-2 text-center text-2xl font-semibold">
-                    {product?.price} $
+                <div className="mx-10 flex justify-center">
+                  <Image
+                    className="mt-4 flex flex-shrink-0 rounded-lg object-contain object-center p-6 xl:mt-0 xl:p-2"
+                    loader={() => product?.image ?? ""}
+                    src={product?.image ?? ""}
+                    height={240}
+                    width={240}
+                    alt="proj"
+                  />
+                </div>
+
+                <div className="mt-4 flex w-full flex-col justify-center gap-6 xl:mt-12">
+                  <p className="text-line m-auto flex gap-4 text-center text-3xl font-bold">
+                    <p className="text-gray-600  line-through">
+                      {((product?.price ?? 1) * 1.2).toFixed(2)} $
+                    </p>
+                    <p>{product?.price} $</p>
                   </p>
                   <div className="flex w-full justify-center gap-6">
                     <select
@@ -131,7 +134,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                     </button>
                   </div>
                 </div>
-              </div>
+              </WindowContainer>
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white py-12 shadow-md">
@@ -152,21 +155,21 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="margin-auto text-md mt-4 flex w-11/12 flex-col items-center justify-center rounded-lg bg-white pb-6 shadow-md xl:w-4/5">
-          <p className="w-full p-4 text-center text-lg font-medium capitalize">
+        <div className="margin-auto text-md mt-4 flex w-11/12 flex-col items-center justify-center rounded-lg bg-white pb-6 shadow-md ">
+          <p className="w-11/12 border-b-2 border-gray-300 pb-2 pt-4 text-center text-lg font-medium capitalize">
             Similar products
           </p>
 
-          <div className="flex w-full items-center ">
+          <div className="mt-4 flex w-full items-center xl:mt-6 ">
             {categoryProducts.map((product, i) => {
               return (
                 <Link
                   key={"categoryProductKey_" + i}
                   href={`/products/${product?.id}`}
-                  className="flex w-full justify-around px-10"
+                  className="flex w-full justify-around px-2 xl:px-10"
                 >
                   <Image
-                    className=" flex rounded-lg object-contain object-center p-2 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none"
+                    className=" flex rounded-lg object-contain object-center p-4 transition-all duration-300 ease-out hover:scale-[1.25] motion-reduce:transform-none xl:p-2"
                     loader={() => product.image}
                     src={product.image}
                     width={90}
