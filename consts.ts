@@ -25,7 +25,7 @@ interface SortingOption {
 
 export const SORTING_OPTIONS: SortingOption[] = [
   {
-    name: "Price To Low",
+    name: "Price To High",
     faIcon: faSortUp,
     sortResult: (products: ProductType[]) =>
       products
@@ -33,7 +33,7 @@ export const SORTING_OPTIONS: SortingOption[] = [
         .sort((productA, productB) => productA.price - productB.price),
   },
   {
-    name: "Price To High",
+    name: "Price To Low",
     faIcon: faSortDown,
     sortResult: (products: ProductType[]) =>
       products
