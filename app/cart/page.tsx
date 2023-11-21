@@ -5,7 +5,6 @@ import {
   FormEvent,
   SetStateAction,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -21,10 +20,16 @@ import { DELIVERY_DATA, ORDER_STAGE } from "@/consts";
 interface Prop {
   currentStage: number;
   productItems: JSX.Element;
+  deliveryInputs: string[];
   setDeliveryInput: Dispatch<SetStateAction<string[]>>;
 }
 
-function StageView({ currentStage, productItems, setDeliveryInput }: Prop) {
+function StageView({
+  currentStage,
+  productItems,
+  deliveryInputs,
+  setDeliveryInput,
+}: Prop) {
   const onInputChange = (e: FormEvent<HTMLInputElement>, index: number) => {
     const target = e.target as HTMLInputElement;
 
@@ -49,6 +54,7 @@ function StageView({ currentStage, productItems, setDeliveryInput }: Prop) {
           className="bold text-md w-4/5 rounded-lg bg-blue-100 px-4 py-1 font-semibold shadow-md xl:w-1/3"
           placeholder={result.data}
           type={result.type}
+          value={deliveryInputs[i]}
         />
       );
     });
@@ -60,8 +66,6 @@ function StageView({ currentStage, productItems, setDeliveryInput }: Prop) {
       </WindowContainer>
     );
   } else if (currentStage === 2) {
-    const clearInputs = DELIVERY_DATA.map(() => "");
-    setDeliveryInput(clearInputs);
     return (
       <WindowContainer className="flex w-4/5 justify-center py-6 text-center font-semibold xl:w-1/2">
         PAYMENT
@@ -105,6 +109,7 @@ export default function Cart() {
   }, [cartItems]);
 
   const stageName = useMemo(() => {
+    console.log("stageName: " + currentStage);
     if (currentStage + 1 <= ORDER_STAGE.length - 1)
       return ORDER_STAGE[currentStage + 1].name;
 
@@ -132,6 +137,8 @@ export default function Cart() {
   };
 
   const onNextCartStage = () => {
+    console.log("onNextCartStage: " + currentStage);
+
     if (currentStage === ORDER_STAGE.length - 1) return;
 
     setCurrentStage(currentStage + 1);
@@ -144,6 +151,8 @@ export default function Cart() {
   };
 
   const stageButton = useMemo(() => {
+    console.log("stageButton useMemo: " + currentStage);
+
     let inputsFilled = 0;
     for (let index = 0; index < deliveryInputs.length; index++) {
       if (deliveryInputs[index]) inputsFilled++;
@@ -169,15 +178,11 @@ export default function Cart() {
         {stageName}
       </button>
     );
-  }, [
-    cartItems.length,
-    currentStage,
-    deliveryInputs,
-    onNextCartStage,
-    stageName,
-  ]);
+  }, [cartItems.length, currentStage, deliveryInputs, stageName]);
 
   const backButton = useMemo(() => {
+    console.log("onNextCartStage: " + currentStage);
+
     if (currentStage == 0) return <></>;
 
     return (
@@ -192,7 +197,7 @@ export default function Cart() {
         <p className="pr-2 text-white group-hover:text-blue-500">Back</p>
       </button>
     );
-  }, [currentStage, onPrevCartStage]);
+  }, [currentStage]);
 
   const alertTitleText = useMemo(() => {
     return (
@@ -235,6 +240,7 @@ export default function Cart() {
       <StageView
         currentStage={currentStage}
         productItems={productItems}
+        deliveryInputs={deliveryInputs}
         setDeliveryInput={setDeliveryInput}
       />
       <WindowContainer className="flex w-4/5 flex-col items-center gap-4 p-4 xl:w-1/2 xl:flex-row xl:justify-end xl:gap-16 xl:p-6 xl:pl-4 xl:pr-28">

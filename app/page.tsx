@@ -14,13 +14,18 @@ import { Product as ProductType } from "@/types";
 import Product from "@/components/Product";
 import { Context } from "@/components/ContextWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faSortDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { SORTING_OPTIONS } from "@/consts";
 import WindowContainer from "@/components/WindowContainer";
 
 interface Prop {
+  categories: any[];
   currentCategory: string;
   products: ProductType[];
-  categories: any[];
+  filterItems: ProductType[];
   setFilter: Dispatch<SetStateAction<boolean>>;
   setCategory: Dispatch<SetStateAction<string>>;
   setProducts: Dispatch<SetStateAction<ProductType[]>>;
@@ -29,9 +34,10 @@ interface Prop {
 }
 
 function NavView({
+  categories,
   currentCategory,
   products,
-  categories,
+  filterItems,
   setFilter,
   setProducts,
   setCategory,
@@ -43,10 +49,13 @@ function NavView({
   const [maxPrice, setMaxPrice] = useState(0);
 
   const onPriceFilter = useCallback(() => {
-    if (minPrice == 0 && maxPrice == 0) return products;
+    const productsToSort = filterItems.length === 0 ? products : filterItems;
+
+    if (minPrice == 0 && maxPrice == 0) return productsToSort;
 
     setFilter(true);
-    const productsFiltered = products.filter(
+
+    const productsFiltered = productsToSort.filter(
       (product) => product.price >= minPrice && product.price <= maxPrice,
     );
 
@@ -66,6 +75,9 @@ function NavView({
     const categoryProducts = await result.json();
 
     setFilter(false);
+    setMinPrice(0);
+    setMaxPrice(0);
+    setFilteredItems([]);
     setSearchLabelValue("");
     setProducts(categoryProducts);
     setCategory(category);
@@ -80,6 +92,16 @@ function NavView({
     const target = e.target as HTMLInputElement;
     setMaxPrice(parseInt(target.value));
   };
+
+  const minPriceValue = useMemo(() => {
+    const value = minPrice === 0 ? "" : minPrice.toString();
+    return value;
+  }, [minPrice]);
+
+  const maxPriceValue = useMemo(() => {
+    const value = maxPrice === 0 ? "" : maxPrice.toString();
+    return value;
+  }, [maxPrice]);
 
   if (!isNavEnabled) return <></>;
 
@@ -112,6 +134,7 @@ function NavView({
           className="bold text-md w-20  rounded-lg px-4 py-1 text-center font-semibold shadow-md"
           placeholder="min"
           type="number"
+          value={minPriceValue}
         />
         <span className="text-md font-semibold">-</span>
         <input
@@ -119,6 +142,7 @@ function NavView({
           className="bold text-md w-20 rounded-lg px-4 py-1 text-center font-semibold shadow-md"
           placeholder="max"
           type="number"
+          value={maxPriceValue}
         />
         <span className="text-md font-semibold">$</span>
       </div>
@@ -142,8 +166,10 @@ export default function Home() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [currentCategory, setCategory] = useState("All");
+  const [showSortingView, setShowSortingView] = useState(false);
   const [searchLabelValue, setSearchLabelValue] = useState<string>("");
   const [isFilterSet, setFilter] = useState(false);
+  const [currentSortOption, setCurrentSortOption] = useState<number>(0);
 
   const productItems = useMemo(() => {
     const productsToDisplay = isFilterSet ? filterItems : products;
@@ -194,6 +220,7 @@ export default function Home() {
   };
 
   const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (e.code === "Enter") {
       onSearchClick();
     }
@@ -212,12 +239,62 @@ export default function Home() {
     setFilter(true);
   }, [products, searchLabelValue]);
 
+  useEffect(() => {
+    const productsToSort = filterItems.length === 0 ? products : filterItems;
+    const sortProducts =
+      SORTING_OPTIONS[currentSortOption].sortResult(productsToSort);
+
+    setFilteredItems(sortProducts);
+    setFilter(true);
+  }, [currentSortOption, products]);
+
+  const sortingOption = useMemo(() => {
+    return (
+      <p className="p-1 text-xl">{SORTING_OPTIONS[currentSortOption].name}</p>
+    );
+  }, [currentSortOption]);
+
+  const sortingView = useMemo(() => {
+    const isShow = showSortingView ? "flex scale-y-100" : "hidden";
+    return (
+      <div
+        className={`${isShow} absolute left-6 z-10 mt-12 w-full scale-x-100 rounded-lg bg-blue-100 px-2 py-4 shadow-md duration-300 ease-out `}
+      >
+        <ul className="flex w-full flex-col gap-2 pl-4">
+          {SORTING_OPTIONS.map((sortOption, i) => (
+            <button
+              key={"categoryListKey_" + i}
+              onClick={() => {
+                setCurrentSortOption(i);
+                setShowSortingView(false);
+              }}
+              className={`${
+                i === currentSortOption
+                  ? " text-left text-2xl font-semibold text-blue-400"
+                  : "text-grey-700 text-xl font-normal"
+              } flex transform flex-row items-center justify-between transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none`}
+            >
+              <p className="h-[1lh]text-left line-clamp-1 capitalize ">
+                {sortOption.name}
+              </p>
+              {/* <FontAwesomeIcon
+                className="h-4 w-4 justify-center p-2 pr-4 text-gray-800 group-hover:text-white"
+                icon={sortOption.faIcon}
+              /> */}
+            </button>
+          ))}
+        </ul>
+      </div>
+    );
+  }, [currentSortOption, showSortingView]);
+
   return (
     <div className="flex w-full grow">
       <NavView
+        categories={categories}
         currentCategory={currentCategory}
         products={products}
-        categories={categories}
+        filterItems={filterItems}
         setFilter={setFilter}
         setProducts={setProducts}
         setCategory={setCategory}
@@ -226,28 +303,52 @@ export default function Home() {
       />
       <div className="flex w-full flex-col bg-slate-100">
         <div className="my-12 flex w-full flex-col items-center justify-start gap-8">
-          <WindowContainer className="mt-2 flex w-4/5 flex-col gap-2 p-4 text-2xl font-semibold capitalize lg:w-4/5 xl:flex-row xl:items-center xl:p-6 ">
-            <p className="text-center xl:mr-4 xl:border-r-2 xl:border-gray-300 xl:pr-4 xl:text-left">
+          <WindowContainer className="mt-2 flex w-4/5 flex-col gap-2 p-8 text-2xl font-semibold capitalize lg:w-4/5 xl:flex-row xl:items-center xl:p-6 ">
+            <p className="whitespace-nowrap text-center xl:mr-4 xl:w-auto xl:border-r-2 xl:border-gray-300 xl:pr-4 xl:text-left">
               {currentCategory}
             </p>
-            <div className="flex items-center gap-4">
-              <input
-                onInput={(e) => onSearchLabelChange(e)}
-                className="bold text-md my-2 w-10/12 rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-3/5"
-                placeholder="Search"
-                type="text"
-                onKeyUp={(e) => onKeyUp(e)}
-                value={searchLabelValue}
-              />
-              <button
-                onClick={onSearchClick}
-                className="btn-primary group flex bg-blue-100 hover:bg-blue-500"
-              >
-                <FontAwesomeIcon
-                  className="h-4 w-4 p-2 text-gray-800 group-hover:text-white"
-                  icon={faMagnifyingGlass}
+            <div className="flex w-full flex-col justify-between gap-4 xl:flex-row">
+              <div className="flex items-center gap-4 ">
+                <input
+                  onInput={(e) => onSearchLabelChange(e)}
+                  className="bold text-md my-2 w-10/12 rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-3/5"
+                  placeholder="Search"
+                  type="text"
+                  onKeyUp={(e) => onKeyUp(e)}
+                  value={searchLabelValue}
                 />
-              </button>
+                <button
+                  onClick={onSearchClick}
+                  className="btn-primary group flex bg-blue-100 hover:bg-blue-500"
+                >
+                  <FontAwesomeIcon
+                    className="h-4 w-4 p-2 text-gray-800 group-hover:text-white"
+                    icon={faMagnifyingGlass}
+                  />
+                </button>
+              </div>
+
+              <div className="flex w-full flex-col items-center gap-2 xl:w-auto xl:flex-row xl:gap-0">
+                <p className="text-center xl:mr-4 xl:w-auto xl:border-r-2 xl:border-gray-300 xl:pr-4 xl:text-left">
+                  Sort
+                </p>
+                <div className="flex w-full items-center justify-center gap-4">
+                  <div className="bold relative flex w-4/5 rounded-lg bg-blue-100 px-4 text-2xl font-semibold text-gray-600 shadow-md xl:w-64">
+                    {sortingOption}
+                    {sortingView}
+                  </div>
+
+                  <button
+                    onClick={() => setShowSortingView(!showSortingView)}
+                    className="btn-primary group flex bg-blue-100 hover:bg-blue-500"
+                  >
+                    <FontAwesomeIcon
+                      className="h-4 w-4 p-2 text-gray-800 group-hover:text-white"
+                      icon={faSortDown}
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
           </WindowContainer>
           {productItems}
