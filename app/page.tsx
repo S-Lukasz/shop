@@ -114,8 +114,8 @@ function NavView({
             key={"categoryListKey_" + i}
             className={`${
               category === currentCategory
-                ? " text-lg font-semibold text-blue-400"
-                : "text-grey-700 text-md font-normal"
+                ? "text-lg font-semibold text-blue-400 "
+                : "text-grey-700 text-md font-normal "
             } transform transition-all duration-300 ease-out hover:scale-110 hover:text-black motion-reduce:transform-none`}
           >
             <button
@@ -151,7 +151,7 @@ function NavView({
           onPriceFilter();
           if (isMobileView) setNavView(false);
         }}
-        className="btn-primary bold text-md mx-12 mt-10 flex w-32 justify-center px-4 py-1 font-semibold "
+        className="btn-primary bold text-md mx-12 mt-10 flex w-32 justify-center px-4 py-1 font-semibold"
       >
         FILTER
       </button>
@@ -304,7 +304,7 @@ export default function Home() {
               {currentCategory}
             </p>
             <div className="flex w-full flex-col justify-between gap-4 xl:flex-row">
-              <div className="flex items-center gap-4 ">
+              <div className="flex items-center gap-4">
                 <input
                   onInput={(e) => onSearchLabelChange(e)}
                   className="bold text-md my-2 w-10/12 grow rounded-lg bg-blue-100 px-4 font-semibold shadow-md xl:w-3/5"
