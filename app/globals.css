@@ -19,18 +19,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* @media (min-width: 576px) {
-  .img_class {
-    max-width: 40px;
-  }
-} */
-/* 
-@media (min-width: 768px) {
-  .img_class {
-    max-width: 80px;
-  }
-} */
-
 @layer components
 {
   .btn-primary{

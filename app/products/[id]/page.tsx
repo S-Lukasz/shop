@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import WindowContainer from "@/components/WindowContainer";
 import Image from "next/image";
 import Link from "next/link";
-import { renderIntoDocument } from "react-dom/test-utils";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const amounts = new Array(99)
@@ -65,7 +64,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   }, [params.id, setFetch]);
 
   return (
-    // product ? <Product product={product}></Product> : <p>No item available</p>
     <div className="m-auto flex w-full flex-col justify-center gap-4 py-12 xl:w-3/5">
       <div className="flex justify-center">
         <p className="text-md m-auto flex w-11/12 gap-2 rounded-lg bg-white p-4 pl-6 font-medium capitalize shadow-md  ">
@@ -139,7 +137,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white py-12 shadow-md">
-              <p className="flex w-full divide-x-2 divide-gray-600 text-center text-xl font-semibold capitalize">
+              <p className="text-md flex w-full divide-x-2 divide-gray-600 text-center font-semibold capitalize sm:text-xl">
                 <div className="flex grow items-center justify-center capitalize text-blue-500">
                   Description
                 </div>
@@ -150,7 +148,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   Opinions
                 </div>
               </p>
-              <p className="mx-6 border-t-2 border-gray-300 px-14 pt-6 text-xl capitalize">
+              <p className="text-md mx-6 border-t-2 border-gray-300 px-8 pt-6 capitalize sm:px-14 sm:text-xl">
                 {product?.description}
               </p>
             </div>

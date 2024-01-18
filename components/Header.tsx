@@ -27,14 +27,10 @@ export default function Header() {
       name: "Menu",
       path: "/",
     },
-    // {
-    //   name: "About",
-    //   path: "/about",
-    // },
-    // {
-    //   name: "Cart",
-    //   path: "/cart",
-    // },
+    {
+      name: "About",
+      path: "/about",
+    },
   ];
 
   return (
@@ -43,9 +39,9 @@ export default function Header() {
 
       <div className="flex">
         <div className="flex h-16 items-center bg-white text-center ">
-          <div className="flex items-center divide-x-2 divide-gray-300 text-center text-2xl font-bold ">
+          <div className="flex items-center divide-x-2 divide-gray-300 text-center text-sm font-bold sm:text-2xl ">
             <button
-              className="group px-10 "
+              className="group px-5 sm:px-10 "
               onClick={() => setNavView(!isNavEnabled)}
             >
               <FontAwesomeIcon
@@ -57,7 +53,7 @@ export default function Header() {
             {PAGES.map((result, i) => (
               <Link
                 key={"pageKey_" + i}
-                className="group px-10 "
+                className="group px-5 sm:px-10 "
                 href={result.path}
               >
                 <p className="transform text-gray-700 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-blue-600 motion-reduce:transform-none ">
